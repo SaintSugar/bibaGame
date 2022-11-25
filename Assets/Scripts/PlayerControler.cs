@@ -23,10 +23,6 @@ public class PlayerControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (GetComponent<Rigidbody2D>().position.y < 0) {
-            GetComponent<Rigidbody2D>().position = new Vector2(GetComponent<Rigidbody2D>().position.x, 0);
-        }*/
-
         float x,y;
         x = Input.GetAxis("Horizontal");
         y = Input.GetAxis("Vertical");
@@ -45,93 +41,42 @@ public class PlayerControler : MonoBehaviour
 
         Vector2 new_velocity = GetComponent<Rigidbody2D>().velocity;
 
-        //if (current_velocity.magnitude <= Speed && control.magnitude > 0) {
-        //    GetComponent<Rigidbody2D>().velocity = control * Speed;
-        //}
-        if ((Mathf.Abs(current_velocity.x) <= Mathf.Abs(control.x) * Speed || control.x * current_velocity.x < 0) && ForcePull[0] == 0) {
-            new_velocity.x = control.x * Speed;
-        }
-        else {
-                if (ForcePull[0] == 0 && (Mathf.Abs(current_velocity.x) > Speed)) {
-                    ForcePull[0] = current_velocity.x / Mathf.Abs(current_velocity.x);
-                }
-
-                if (ForcePull[0] * (current_velocity.x - control.x * Speed) <= 0 && ForcePull[0] != 0) {
-                    ForcePull[0] = 0;
-                    new_velocity.x = control.x * Speed;
-                }
-                
-                
-                if (((ForcePull[0] * (current_velocity.x - control.x * Speed) > 0 && ForcePull[0] * control.x < 0)) && ForcePull[0] != 0) {
-                    //new_velocity.x += control.x * Acceleration;
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(Acceleration * control.x, 0));
-                }
-                
-        }
-
-        if ((Mathf.Abs(current_velocity.y) <= Mathf.Abs(control.y) * Speed || control.y * current_velocity.y < 0) && ForcePull[1] == 0) {
-            new_velocity.y = control.y * Speed;
-        }
-        else {
-                if (ForcePull[1] == 0 && (Mathf.Abs(current_velocity.y) > Speed)) {
-                    ForcePull[1] = current_velocity.y / Mathf.Abs(current_velocity.y);
-                }
-
-                if (ForcePull[1] * (current_velocity.y - control.y * Speed) <= 0 && ForcePull[1] != 0) {
-                    ForcePull[1] = 0;
-                    new_velocity.y = control.y * Speed;
-                }
-                
-                
-                if (((ForcePull[1] * (current_velocity.y - control.y * Speed) > 0 && ForcePull[1] * control.y < 0)) && ForcePull[1] != 0) {
-
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(0, Acceleration * control.y));
-                }
-                
-        }
+        new_velocity.x = speedCheck(current_velocity.x, control.x, new_velocity.x, 0);
+        new_velocity.y = speedCheck(current_velocity.y, control.y, new_velocity.y, 1);
 
         GetComponent<Rigidbody2D>().velocity = new_velocity;
-        //Vector2 contr = new Vector2(x, y) * Speed;
-        //GetComponent<Rigidbody2D>().velocity += contr*Acceleration;
-        //GetComponent<Rigidbody2D>().velocity += contr;
     }
 
+    float speedCheck(float current_velocity, float control, float new_velocity, int axis) {
+        if ((Mathf.Abs(current_velocity) <= Mathf.Abs(control) * Speed || control * current_velocity < 0) && ForcePull[axis] == 0) {
+            new_velocity = control * Speed;
+        }
+        else {
+                if (ForcePull[axis] == 0 && (Mathf.Abs(current_velocity) > Speed)) {
+                    ForcePull[axis] = current_velocity / Mathf.Abs(current_velocity);
+                }
 
+                if (ForcePull[axis] * (current_velocity - control * Speed) <= 0 && ForcePull[axis] != 0) {
+                    ForcePull[axis] = 0;
+                    new_velocity = control * Speed;
+                }
+                
+                
+                if (((ForcePull[axis] * (current_velocity - control * Speed) > 0 && ForcePull[axis] * control < 0)) && ForcePull[axis] != 0) {
+
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(Acceleration * control, 0));
+                }
+                
+        }
+        return new_velocity;
+    }
 
     public Transform GroundCheck;
     public LayerMask GroundLayer;
+    
     bool isGrounded() {
         bool onGround = Physics2D.OverlapCircle(GroundCheck.position, GroundCheck.GetComponent<CircleCollider2D>().radius, GroundLayer);
         return onGround;
     }
 
 }
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-
-public class PlayerControler : MonoBehaviour
-{
-    public float Speed;
-    public float moveG;
-    public float moveV;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        moveG = Input.GetAxis("Horizontal") * Speed;
-        moveV = Input.GetAxis("Vertical") * Speed;
-        GetComponent<Rigidbody2D>().velocity = new Vector2(moveG, moveV); 
-    }
-}
-
-
-
-
-*/
