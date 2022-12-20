@@ -20,19 +20,31 @@ public class PlayerControler : MonoBehaviour
         //Gravity = GetComponent<Rigidbody2D>().gravityScale != 0;
     }
 
+    private bool JumpControlPrevState;
     // Update is called once per frame
     void Update()
     {
+        RgBodySetup();
         float x,y;
         x = Input.GetAxis("Horizontal");
         y = Input.GetAxis("Vertical");
 
         if (Gravity) {
-            y = 0;
-            if (Input.GetAxis("Jump") != 0 && isGrounded()) {
-                //GetComponent<Rigidbody2D>().AddForce(new Vector2(0, JumpForce));
-                y = JumpForce;
+            y = GetComponent<Rigidbody2D>().velocity.y;
+            canJump();
+            if (Input.GetAxis("Jump") != 0 && canJump() && (JumpMachine == 0 || !JumpControlPrevState)) {
+                
+                    y = JumpForce;
+                    //GetComponent<Rigidbody2D>().AddForce(new Vector2(0, JumpForce), ForceMode2D.Impulse);
+                    JumpMachine++;
+                
             }
+        }
+        if (Input.GetAxis("Jump") == 0) {
+            JumpControlPrevState = false;
+        }
+        else {
+            JumpControlPrevState = true;
         }
 
         Vector2 control = new Vector2(x, y);
@@ -42,7 +54,11 @@ public class PlayerControler : MonoBehaviour
         Vector2 new_velocity = GetComponent<Rigidbody2D>().velocity;
 
         new_velocity.x = speedCheck(current_velocity.x, control.x, new_velocity.x, 0);
-        new_velocity.y = speedCheck(current_velocity.y, control.y, new_velocity.y, 1);
+        if (!Gravity){
+            new_velocity.y = speedCheck(current_velocity.y, control.y, new_velocity.y, 1);
+        }
+        else
+            new_velocity.y = y;
 
         GetComponent<Rigidbody2D>().velocity = new_velocity;
     }
@@ -63,20 +79,48 @@ public class PlayerControler : MonoBehaviour
                 
                 
                 if (((ForcePull[axis] * (current_velocity - control * Speed) > 0 && ForcePull[axis] * control < 0)) && ForcePull[axis] != 0) {
-
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(Acceleration * control, 0));
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(Acceleration * control * (Mathf.Abs(axis - 1)), Acceleration * control * axis));
                 }
                 
         }
         return new_velocity;
     }
 
-    public Transform GroundCheck;
+    //public Transform GroundCheck;
     public LayerMask GroundLayer;
     
     bool isGrounded() {
-        bool onGround = Physics2D.OverlapCircle(GroundCheck.position, GroundCheck.GetComponent<CircleCollider2D>().radius, GroundLayer);
+        bool onGround = Physics2D.OverlapCircle(GetComponent<CircleCollider2D>().offset + GetComponent<Rigidbody2D>().position, GetComponent<CircleCollider2D>().radius, GroundLayer);
         return onGround;
+    }
+
+    private int JumpMachine = 0;
+    public int JumpAmount;
+
+    bool canJump() {
+        if (isGrounded() && JumpMachine > 0 && Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < 10){
+            JumpMachine = 0;
+            return false;
+        }
+        else if (JumpMachine < JumpAmount) {
+            return true;
+        }
+        return false;
+    }
+
+    public float gravityScale;
+    public float LinearDragPlatformer;
+    public float LinearDragIsometric;
+
+    void RgBodySetup() {
+        if (Gravity) {
+            GetComponent<Rigidbody2D>().gravityScale = gravityScale;
+            GetComponent<Rigidbody2D>().drag = LinearDragPlatformer;
+        }
+        else {
+            GetComponent<Rigidbody2D>().gravityScale = 0;
+            GetComponent<Rigidbody2D>().drag = LinearDragIsometric;
+        }
     }
 
 }
