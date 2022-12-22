@@ -11,7 +11,7 @@ public class Follow : MonoBehaviour {
     
 
     // Update is called once per frame
-    void Update () {
+    void LateUpdate () {
         float xp, yp, xc, yc;
         xp = Target.transform.position.x;
         yp = Target.transform.position.y;
