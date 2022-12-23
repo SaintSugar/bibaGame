@@ -7,3 +7,4 @@ Build/
 bibaGame.sln
 settings.json
 .NETFramework*
+Temp/
