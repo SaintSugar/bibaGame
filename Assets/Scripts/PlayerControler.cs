@@ -11,9 +11,11 @@ public class PlayerControler : MonoBehaviour
     public float JumpForce;
 
     private float[] ForcePull;
+    private Rigidbody2D Rig;
  
     void Start()
     {
+        Rig = GetComponent<Rigidbody2D>();
         ForcePull = new float[2];
         ForcePull[0] = 0;
         ForcePull[1] = 0;
@@ -23,21 +25,21 @@ public class PlayerControler : MonoBehaviour
     private bool FlyControlPrevState = false;
     void Update()
     {
-        RgBodySetup();
+        RigSetup();
 
         if (Input.GetAxis("Fly") != 0 && ! FlyControlPrevState) 
             Gravity = !Gravity;
         FlyControlPrevState = Input.GetAxis("Fly") != 0;
 
-        Vector2 current_velocity = GetComponent<Rigidbody2D>().velocity;
-        Vector2 new_velocity = GetComponent<Rigidbody2D>().velocity;
+        Vector2 current_velocity = Rig.velocity;
+        Vector2 new_velocity = Rig.velocity;
         Vector2 control = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         new_velocity.x = speedCheck(current_velocity.x, control.x, new_velocity.x, 0);
 
         if (Gravity) {
             control.y = 0;
-            if (isGrounded() && JumpMachine > 0 && Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < 10)
+            if (isGrounded() && JumpMachine > 0 && Mathf.Abs(Rig.velocity.y) < 10)
                 JumpMachine = 0;
             if (Input.GetAxis("Jump") != 0 && JumpMachine < JumpAmount && (JumpMachine == 0 || !JumpControlPrevState)) {
                     new_velocity.y = JumpForce;
@@ -48,7 +50,7 @@ public class PlayerControler : MonoBehaviour
         else
             new_velocity.y = speedCheck(current_velocity.y, control.y, new_velocity.y, 1);
 
-        GetComponent<Rigidbody2D>().velocity = new_velocity;
+        Rig.velocity = new_velocity;
     }
 
     float speedCheck(float current_velocity, float control, float new_velocity, int axis) {
@@ -64,7 +66,7 @@ public class PlayerControler : MonoBehaviour
             new_velocity = control * Speed;
         }
         else if (((ForcePull[axis] * (current_velocity - control * Speed) > 0 && ForcePull[axis] * control < 0)) && ForcePull[axis] != 0) 
-            GetComponent<Rigidbody2D>().AddForce(new Vector2(Acceleration * control * (Mathf.Abs(axis - 1)), Acceleration * control * axis));
+            Rig.AddForce(new Vector2(Acceleration * control * (Mathf.Abs(axis - 1)), Acceleration * control * axis));
                 
                 
         return new_velocity;
@@ -74,7 +76,7 @@ public class PlayerControler : MonoBehaviour
     public LayerMask GroundLayer;
     
     bool isGrounded() {
-        bool onGround = Physics2D.OverlapCircle(GetComponent<CircleCollider2D>().offset + GetComponent<Rigidbody2D>().position, GetComponent<CircleCollider2D>().radius, GroundLayer);
+        bool onGround = Physics2D.OverlapCircle(GetComponent<CircleCollider2D>().offset + Rig.position, GetComponent<CircleCollider2D>().radius, GroundLayer);
         return onGround;
     }
 
@@ -84,14 +86,14 @@ public class PlayerControler : MonoBehaviour
     public float LinearDragPlatformer;
     public float LinearDragIsometric;
 
-    void RgBodySetup() {
+    void RigSetup() {
         if (Gravity) {
-            GetComponent<Rigidbody2D>().gravityScale = gravityScale;
-            GetComponent<Rigidbody2D>().drag = LinearDragPlatformer;
+            Rig.gravityScale = gravityScale;
+            Rig.drag = LinearDragPlatformer;
         }
         else {
-            GetComponent<Rigidbody2D>().gravityScale = 0;
-            GetComponent<Rigidbody2D>().drag = LinearDragIsometric;
+            Rig.gravityScale = 0;
+            Rig.drag = LinearDragIsometric;
         }
         GetComponent<PlayerAnimation>().Gravity = Gravity;
     }
