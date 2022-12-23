@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 7675031024407686444}
   - component: {fileID: 7675031024407686433}
   - component: {fileID: 7675031024407686432}
+  - component: {fileID: 1440748467778129667}
+  - component: {fileID: 1990986616279258864}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -155,7 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 20
   Acceleration: 3
-  Gravity: 1
+  Gravity: 0
   JumpForce: 40
   GroundLayer:
     serializedVersion: 2
@@ -164,3 +166,43 @@ MonoBehaviour:
   gravityScale: 10
   LinearDragPlatformer: 1
   LinearDragIsometric: 20
+--- !u!114 &1440748467778129667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7675031024407686443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10448c370d2bf4a40aa8aaea25a4adff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StateRun: {fileID: 7400000, guid: 2d971b0fca3014040847ab2a7cf33e8e, type: 2}
+  StateRunSide: {fileID: 7400000, guid: 3348dee2ba4754c40b424cfcb11c2a94, type: 2}
+  StateRunBack: {fileID: 7400000, guid: 0850d2f088495f34981d7c3fd99ce661, type: 2}
+  StateIdle: {fileID: 7400000, guid: 1a52856f46b0be3439245c346344a143, type: 2}
+  StateIdleSide: {fileID: 7400000, guid: 4551fc19ff72bff4c8307861f655b837, type: 2}
+  StateIdleBack: {fileID: 7400000, guid: 307ca68a80ec4ef45b8a48dbf98d8854, type: 2}
+  speed: 5
+  Gravity: 0
+--- !u!95 &1990986616279258864
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7675031024407686443}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b41abbe7fd13a0f4fb5c1f8c8903ff4e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

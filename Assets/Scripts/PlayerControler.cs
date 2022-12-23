@@ -21,7 +21,7 @@ public class PlayerControler : MonoBehaviour
 
     private bool JumpControlPrevState;
 
-    void FixedUpdate()
+    void Update()
     {
         RgBodySetup();
 
