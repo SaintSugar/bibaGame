@@ -4,7 +4,7 @@ Logs/
 UserSettings/
 Build/
 *.csproj*
-bibaGame.sln
+*.sln
 settings.json
 .NETFramework*
 Temp/
