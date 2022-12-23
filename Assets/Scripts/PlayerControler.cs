@@ -19,11 +19,15 @@ public class PlayerControler : MonoBehaviour
         ForcePull[1] = 0;
     }
 
-    private bool JumpControlPrevState;
-
+    private bool JumpControlPrevState = false;
+    private bool FlyControlPrevState = false;
     void Update()
     {
         RgBodySetup();
+
+        if (Input.GetAxis("Fly") != 0 && ! FlyControlPrevState) 
+            Gravity = !Gravity;
+        FlyControlPrevState = Input.GetAxis("Fly") != 0;
 
         Vector2 current_velocity = GetComponent<Rigidbody2D>().velocity;
         Vector2 new_velocity = GetComponent<Rigidbody2D>().velocity;
@@ -39,12 +43,7 @@ public class PlayerControler : MonoBehaviour
                     new_velocity.y = JumpForce;
                     JumpMachine++;
             }
-            if (Input.GetAxis("Jump") == 0) {
-                JumpControlPrevState = false;
-            }
-            else {
-                JumpControlPrevState = true;
-            }
+                JumpControlPrevState = Input.GetAxis("Jump") != 0;
         }
         else
             new_velocity.y = speedCheck(current_velocity.y, control.y, new_velocity.y, 1);
@@ -94,6 +93,7 @@ public class PlayerControler : MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = 0;
             GetComponent<Rigidbody2D>().drag = LinearDragIsometric;
         }
+        GetComponent<PlayerAnimation>().Gravity = Gravity;
     }
 
 }
