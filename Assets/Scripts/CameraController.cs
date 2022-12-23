@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     public float MinSize;
     public float SizeStep;
     public bool ScaleCameraRadius;
-    public CameraSpeed;
+    public float CameraSpeed;
     // Start is called before the first frame update
     void Start()
     {

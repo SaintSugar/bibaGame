@@ -11,21 +11,21 @@ public class PlayerControler : MonoBehaviour
     public float JumpForce;
 
     private float[] ForcePull;
-    private Rigidbody2D Rig;
  
     void Start()
     {
-        Rig = GetComponent<Rigidbody2D>();
         ForcePull = new float[2];
         ForcePull[0] = 0;
         ForcePull[1] = 0;
+        Rig = GetComponent<Rigidbody2D>();
     }
 
     private bool JumpControlPrevState = false;
     private bool FlyControlPrevState = false;
+    private Rigidbody2D Rig;
     void Update()
     {
-        RigSetup();
+        RgBodySetup();
 
         if (Input.GetAxis("Fly") != 0 && ! FlyControlPrevState) 
             Gravity = !Gravity;
@@ -86,7 +86,7 @@ public class PlayerControler : MonoBehaviour
     public float LinearDragPlatformer;
     public float LinearDragIsometric;
 
-    void RigSetup() {
+    void RgBodySetup() {
         if (Gravity) {
             Rig.gravityScale = gravityScale;
             Rig.drag = LinearDragPlatformer;
