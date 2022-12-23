@@ -3,3 +3,7 @@ Library/
 Logs/
 UserSettings/
 Build/
+*.csproj*
+bibaGame.sln
+settings.json
+.NETFramework*
