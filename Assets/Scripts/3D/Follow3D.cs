@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
  
 
-public class Follow3d : MonoBehaviour {
+public class Follow3D : MonoBehaviour {
 
     public float Radius;
     public float Elasticity;
