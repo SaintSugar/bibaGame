@@ -34,13 +34,30 @@ public class PlayerControler3D : MonoBehaviour
 
         Vector3 current_velocity = Rig.velocity;
         Vector3 new_velocity = Rig.velocity;
-        Vector2 control = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-        new_velocity.x = speedCheck(current_velocity.x, control.x, new_velocity.x, 0);
+        Vector2 control = new Vector2(0,0);
+        RigidbodyConstraints constraints = RigidbodyConstraints.FreezeRotation;
+        switch (PlatformerCamera.direction) {
+            case 0:
+                control = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                break;
+            case 1:
+                control = new Vector2(-Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
+                break;
+            case 2:
+                control = new Vector2(-Input.GetAxis("Horizontal"), -Input.GetAxis("Vertical"));
+                constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                break;
+            case 3:
+                control = new Vector2(Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+                constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
+                break;
+            
+        }
 
         if (Gravity) {
-            Rig.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-            control.y = 0;
+            Rig.constraints = constraints;
             if (isGrounded() && JumpMachine > 0 && Mathf.Abs(Rig.velocity.y) < 10)
                 JumpMachine = 0;
             if (Input.GetAxis("Jump") != 0 && JumpMachine < JumpAmount && (JumpMachine == 0 || !JumpControlPrevState)) {
@@ -50,12 +67,13 @@ public class PlayerControler3D : MonoBehaviour
         }
         else {
             Rig.constraints = RigidbodyConstraints.FreezeRotation;
-            new_velocity.z = speedCheck(current_velocity.z, control.y, new_velocity.z, 1);
             if (Input.GetAxis("Jump") != 0 &&!JumpControlPrevState) {
                     //new_velocity.z = JumpForce;
                     Rig.AddForce(new Vector3(control.x, 0, control.y).normalized * DashForce, ForceMode.Impulse);
             }
         }
+        new_velocity.x = speedCheck(current_velocity.x, control.x, new_velocity.x, 0);
+        new_velocity.z = speedCheck(current_velocity.z, control.y, new_velocity.z, 1);
         JumpControlPrevState = Input.GetAxis("Jump") != 0;
         Rig.velocity = new_velocity;
     }

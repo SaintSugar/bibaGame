@@ -21,6 +21,8 @@ public class PlayerAnimation3D : MonoBehaviour
     private Rigidbody Rig;
     public float speed;
     public bool Gravity;
+    [SerializeField]
+    private PlatformerSwither PlatformerCamera;
     
     void Start() {
         PlayerAnimator = GetComponent<Animator>();
@@ -29,8 +31,24 @@ public class PlayerAnimation3D : MonoBehaviour
     }
     void LateUpdate()
     {
-        
         Vector3 CurrentSpeed = Rig.velocity;
+        switch (PlatformerCamera.direction) {
+            case 0:
+                break;
+            case 1:
+                CurrentSpeed = new Vector3(CurrentSpeed.z, CurrentSpeed.y, -CurrentSpeed.x);
+                break;
+            case 2:
+                CurrentSpeed = new Vector3(-CurrentSpeed.x, CurrentSpeed.y, -CurrentSpeed.z);
+                break;
+            case 3:
+                CurrentSpeed = new Vector3(-CurrentSpeed.z, CurrentSpeed.y, CurrentSpeed.x);
+                break;
+            
+        }
+
+
+        
         if (CurrentSpeed.magnitude > speed){
             PlayerAnimator.SetBool("Idle", false);
             if (Mathf.Abs(CurrentSpeed.x) > Mathf.Abs(CurrentSpeed.z) || Gravity) {
