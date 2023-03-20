@@ -29,12 +29,13 @@ public class ChunkRenderer : MonoBehaviour
                 for (int z = 0; z < chunkData.chunkWidth; z++) {
                     block = chunkData.GetBlock(x, y, z);
                     if (block.blockID == 0) continue;
-                    if (chunkData.GetBlock(x, y + 1, z).blockID == 0) AddTop(x, y, z, block);
-                    if (chunkData.GetBlock(x, y - 1, z).blockID == 0) AddBottom(x, y, z, block);
-                    if (chunkData.GetBlock(x + 1, y, z).blockID == 0) AddRight(x, y, z, block);
-                    if (chunkData.GetBlock(x - 1, y, z).blockID == 0) AddLeft(x, y, z, block);
-                    if (chunkData.GetBlock(x, y, z + 1).blockID == 0) AddFront(x, y, z, block);
-                    if (chunkData.GetBlock(x, y, z - 1).blockID == 0) AddBack(x, y, z, block);
+                    //if (chunkData.GetBlock(x, y + 1, z).blockID == 0) AddTop(x, y, z, block);
+                    //if (chunkData.GetBlock(x, y - 1, z).blockID == 0) AddBottom(x, y, z, block);
+                    //if (chunkData.GetBlock(x + 1, y, z).blockID == 0) AddRight(x, y, z, block);
+                    //if (chunkData.GetBlock(x - 1, y, z).blockID == 0) AddLeft(x, y, z, block);
+                    //if (chunkData.GetBlock(x, y, z + 1).blockID == 0) AddFront(x, y, z, block);
+                    //if (chunkData.GetBlock(x, y, z - 1).blockID == 0) AddBack(x, y, z, block);
+                    AddBlock(x, y, z, block);
                 }                
             }
         }

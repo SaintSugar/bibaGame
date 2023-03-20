@@ -13,7 +13,8 @@ public class ChunkCreator : MonoBehaviour
         chunkData.Clear();
         //PerlinNoise();
         //Solid();
-        Platformer();
+        //Platformer();
+        TavernTest();
     }
     [SerializeField]
     private bool regenerate = false;
@@ -121,6 +122,16 @@ public class ChunkCreator : MonoBehaviour
             }
         }
     }
+    public void TavernTest() {
+        FullOfAir();
+        FillByBlock(new Vector3(0, 0, 0), new Vector3(15, 0, 15), 1);
+        if (chunkPos == new Vector2(0, 0)) {
+            FillByBlock(new Vector3(0, 0, 0), new Vector3(13, 8, 11), 2);
+            FillByBlock(new Vector3(1, 1, 1), new Vector3(12, 7, 10), 0);
+            FillByBlock(new Vector3(1, 4, 1), new Vector3(12, 4, 10), 2);
+            SetBlock(0, 3, 1, 0);
+        }
+    }
     // Update is called once per frame
     private int getIndex(int x, int y, int z) {
         return x + y * chunkHeigth + z * chunkHeigth * chunkWidth;
@@ -132,6 +143,28 @@ public class ChunkCreator : MonoBehaviour
             return block;
         }
         return chunkData[getIndex(x, y, z)];
+    }
+    void SetBlock(int blockID, int x, int y, int z) {
+        Block block = new Block();
+        block.SetBlock(blockID);
+        chunkData[getIndex(x, y, z)] = block;
+    }
+
+    void FillByBlock(Vector3 start, Vector3 end, int blockID) {
+        if ((int)start.magnitude > (int)end.magnitude) {
+            Vector3 buff = start;
+            start = end;
+            end = buff;
+        }
+
+
+        for (int x = (int)start.x; x <= (int)end.x; x++) {
+            for (int y = (int)start.y; y <= (int)end.y; y++) {
+                for (int z = (int)start.z; z <= (int)end.z; z++) {
+                    SetBlock(blockID, x, y, z);
+                }
+            }
+        }
     }
 }
 
@@ -155,6 +188,12 @@ public class Block {
                 solid = true;
                 invisible = false;
                 texture = new Vector2(0, 4);
+                break;
+            case 2:
+                transparent = false;
+                solid = true;
+                invisible = false;
+                texture = new Vector2(1, 3);
                 break;
         }
     }
